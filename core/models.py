@@ -51,6 +51,7 @@ class Comments(models.Model):
         verbose_name='Автор',
         on_delete=models.CASCADE,
         related_name='comments',
+        null=True,
     )
     news = models.ForeignKey(
         News,
