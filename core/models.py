@@ -15,10 +15,17 @@ class News(models.Model):
         Users,
         verbose_name='Автор',
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
+        related_name='news',
     )
     title = models.CharField('Заголовок', max_length=255)
     text = models.TextField('Текст новости')
+    likes = models.ManyToManyField(
+        Users,
+        verbose_name='Понравилось пользователям',
+        blank=True,
+        related_name='likes'
+    )
     dc = models.DateTimeField('Дата новости', auto_now_add=True)
 
 
