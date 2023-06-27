@@ -12,10 +12,14 @@ import core.permissions
 
 class NewsViewSet(ModelViewSet):
     queryset = core.models.News.objects.all()
-    serializer_class = serializers.News
     pagination_class = pagination.CustomPagination
     authentication_classes = (TokenAuthentication,)
     permission_classes = (core.permissions.IsAdminOrAuthor,)
+
+    def get_serializer_class(self) -> serializers:
+        if self.action in ('list', 'retrieve'):
+            return serializers.NewsRead
+        return serializers.NewsWrite
 
     def perform_create(self, serializer: Serializer) -> None:
         serializer.save(author=self.request.user)
@@ -28,12 +32,14 @@ class NewsViewSet(ModelViewSet):
 
 class CommentsViewSet(ModelViewSet):
     queryset = core.models.Comments.objects.all()
-    serializer_class = serializers.Comments
     pagination_class = pagination.CustomPagination
     authentication_classes = (TokenAuthentication,)
     permission_classes = (core.permissions.IsAdminOrAuthor | core.permissions.IsAboveOwner,)
 
+    def get_serializer_class(self) -> serializers:
+        if self.action in ('list', 'retrieve'):
+            return serializers.CommentsRead
+        return serializers.CommentsWrite
+
     def perform_create(self, serializer: Serializer) -> None:
         serializer.save(author=self.request.user)
-
-
